@@ -20,6 +20,9 @@ type Response struct {
 func main() {
 	godotenv.Load(".env")
 	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("Missing Port env variable")
+	}
 
 	mux := http.NewServeMux()
 
