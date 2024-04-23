@@ -13,6 +13,10 @@ type errorBody struct {
 	Error string `json:"error"`
 }
 
+type Response struct {
+	Status string `json:"status"`
+}
+
 func main() {
 	godotenv.Load(".env")
 	port := os.Getenv("PORT")
@@ -45,14 +49,15 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func readinessHandlerFunc(w http.ResponseWriter, r *http.Request) http.HandlerFunc{
-	return respondWithJSON(w, 200, payload{
-		"status": "ok"
-	})
+func readinessHandlerFunc(w http.ResponseWriter, r *http.Request) {
+	resp := Response{
+		Status: "ok",
+	}
+	respondWithJSON(w, 200, resp)
 }
 
 func errorHandlerFunc(w http.ResponseWriter, r *http.Request) {
-
+	respondWithError(w, 200, "Internal Server Error")
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
