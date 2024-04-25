@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 
+	db "github.com/Conor-Fleming/BlogAggregator/internal/database"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type errorBody struct {
@@ -17,8 +20,21 @@ type Response struct {
 	Status string `json:"status"`
 }
 
+type apiConfig struct {
+	dbClient *db.Queries
+}
+
 func main() {
+	//Loading env variables
 	godotenv.Load(".env")
+	dbURL := os.Getenv("DB")
+	database, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("There was an error when connecting to the Database")
+	}
+	defer database.Close()
+	dbQueries := db.New(database)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Missing Port env variable")
