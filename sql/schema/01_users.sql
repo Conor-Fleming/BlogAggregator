@@ -1,11 +1,10 @@
--- +goose up
-CREATE TABLE users (
-    id int,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    name text,
-    PRIMARY KEY(id)
+-- +goose Up
+CREATE TABLE "users"(
+    "id" uuid PRIMARY KEY,
+    "created_at" TIMESTAMP NOT NULL,
+    "updated_at" TIMESTAMP NOT NULL,
+    "name" TEXT NOT NULL
 );
 
--- +goose down
-DROP TABLE users;
+-- +goose Down
+DROP TABLE "users";
